@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 var Book = require('../models/book');
 
 /* GET home page. */
@@ -7,8 +8,8 @@ router.get('/', function (req, res) {
     res.render('index', {title: 'Welcome to BookAPI'});
 });
 
-/* GET books listing. */
 router.route('/books')
+/* GET books listing. */
     .get(function (req, res) {
         var query = {};
 
@@ -32,11 +33,18 @@ router.route('/books')
                 res.json(books);
             }
         });
+    })
+    .post(function(req, res){
+        var book = new Book(req.body);
+
+        book.save();
+
+        res.status(201).send(book);
     });
 
 router.route('/books/:bookId')
+/* GET a single book by id */
     .get(function (req, res) {
-
         Book.findById(req.params.bookId, function (err, book) {
             if (err) {
                 res.status(500).send(err);
